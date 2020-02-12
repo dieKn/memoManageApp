@@ -16,7 +16,11 @@ class MemoTableViewController: UITableViewController {
         guard let sourceVC = sender.source as? MemoViewController, let memo = sourceVC.memo else{
             return
         }
-        self.memos.append(memo)
+        if let selectedIndexPath = self.tableView.indexPathForSelectedRow{
+            self.memos[selectedIndexPath.row] = memo
+        }else{
+            self.memos.append(memo)
+        }
         self.tableView.reloadData()
     }
     override func viewDidLoad() {
@@ -60,17 +64,16 @@ class MemoTableViewController: UITableViewController {
     }
     */
 
-    /*
+    
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
+            self.memos.remove(at: indexPath.row)
             // Delete the row from the data source
             tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+        }
     }
-    */
+    
 
     /*
     // Override to support rearranging the table view.
@@ -87,14 +90,20 @@ class MemoTableViewController: UITableViewController {
     }
     */
 
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
+        guard let identifier = segue.identifier else {
+            return
+        }
+        if identifier == "editMemo"{
+            let memoVC = segue.destination as! MemoViewController
+            memoVC.memo = self.memos[(self.tableView.indexPathForSelectedRow?.row)!]
+        }
     }
-    */
 
 }
