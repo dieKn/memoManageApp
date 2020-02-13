@@ -9,8 +9,10 @@
 import UIKit
 
 class MemoTableViewController: UITableViewController {
+    
+    var userDefaults = UserDefaults.standard
 
-    var memos = ["blue", "green", "red"]
+    var memos = [String]()
     
     @IBAction func unwindToMemoList(sender: UIStoryboardSegue){
         guard let sourceVC = sender.source as? MemoViewController, let memo = sourceVC.memo else{
@@ -21,10 +23,17 @@ class MemoTableViewController: UITableViewController {
         }else{
             self.memos.append(memo)
         }
+        self.userDefaults.set(self.memos, forKey: "memos")
         self.tableView.reloadData()
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if self.userDefaults.object(forKey: "memos") != nil{
+            self.memos = self.userDefaults.stringArray(forKey: "memos")!
+        } else{
+            self.memos = ["memo1","memo2","memo3"]
+        }
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -69,6 +78,7 @@ class MemoTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             self.memos.remove(at: indexPath.row)
+            self.userDefaults.set(self.memos, forKey: "memos")
             // Delete the row from the data source
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
