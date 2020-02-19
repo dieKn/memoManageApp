@@ -8,16 +8,35 @@
 
 import UIKit
 import CoreData
+import UserNotifications
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
-
-
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        let center = UNUserNotificationCenter.current()
+        center.removeAllPendingNotificationRequests();
+        center.requestAuthorization(options:[.badge, .alert, .sound]) { (granted, error) in if granted { print("通知許可")}}
+        let content = UNMutableNotificationContent()
+        content.title = "メモ1"
+        content.body = "本日のメモ"
+        content.sound = UNNotificationSound.default
+        // 5秒後に通知を出すようにする
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+        
+        // hour時 minute分にアラート
+//        var fireDate = DateComponents()
+//        fireDate.hour = 0
+//        fireDate.minute = 40
+//
+//        let trigger = UNCalendarNotificationTrigger(dateMatching: fireDate, repeats: false)
+        let request = UNNotificationRequest(identifier: "HogehogeNotification", content: content, trigger: trigger)
+        center.add(request)
+        center.delegate = self
         return true
     }
+    
 
     // MARK: UISceneSession Lifecycle
 
@@ -26,6 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to select a configuration to create the new scene with.
         return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
     }
+    
 
     func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
         // Called when the user discards a scene session.

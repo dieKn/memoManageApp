@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 class MemoViewController: UIViewController {
 
@@ -14,6 +16,7 @@ class MemoViewController: UIViewController {
     
     @IBOutlet weak var memoTextField: UITextField!
     @IBOutlet weak var saveButton: UIBarButtonItem!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
