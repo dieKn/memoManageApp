@@ -8,6 +8,7 @@ target 'memoApp' do
   # Pods for memoApp
   pod 'RxSwift'
   pod 'RxCocoa'
+  pod 'RealmSwift'
   target 'memoAppTests' do
     inherit! :search_paths
     # Pods for testing

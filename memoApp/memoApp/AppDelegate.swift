@@ -12,6 +12,9 @@ import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+    
+    var userDefaults = UserDefaults.standard
+    var memos = [String]()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -19,7 +22,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         center.removeAllPendingNotificationRequests();
         center.requestAuthorization(options:[.badge, .alert, .sound]) { (granted, error) in if granted { print("通知許可")}}
         let content = UNMutableNotificationContent()
-        content.title = "メモ1"
+        
+    
+        self.memos = self.userDefaults.stringArray(forKey: "memos") ?? ["memo1", "memo2"]
+        
+        content.title = memos[1]
         content.body = "本日のメモ"
         content.sound = UNNotificationSound.default
         // 5秒後に通知を出すようにする
@@ -32,6 +39,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 //
 //        let trigger = UNCalendarNotificationTrigger(dateMatching: fireDate, repeats: false)
         let request = UNNotificationRequest(identifier: "HogehogeNotification", content: content, trigger: trigger)
+        center.add(request)
+        center.add(request)
         center.add(request)
         center.delegate = self
         return true

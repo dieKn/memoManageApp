@@ -12,6 +12,8 @@
 		83350C8023FAED5400DF94AB /* RxRelay in Frameworks */ = {isa = PBXBuildFile; fileRef = 83350C7F23FAED5400DF94AB /* RxRelay */; };
 		83350C8223FAED6500DF94AB /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; fileRef = 83350C8123FAED6500DF94AB /* RxCocoa */; };
 		83350C8323FAED7100DF94AB /* RxSwift in Frameworks */ = {isa = PBXBuildFile; fileRef = 83350C7E23FAEBA000DF94AB /* RxSwift */; };
+		837D8E132400C4F300A2CA6D /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 837D8E122400C4F300A2CA6D /* Realm.framework */; };
+		837D8E152400C50000A2CA6D /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 837D8E142400C50000A2CA6D /* RealmSwift.framework */; };
 		83D77B1523F2EC35002106B4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D77B1423F2EC35002106B4 /* AppDelegate.swift */; };
 		83D77B1723F2EC35002106B4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D77B1623F2EC35002106B4 /* SceneDelegate.swift */; };
 		83D77B1C23F2EC35002106B4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 83D77B1A23F2EC35002106B4 /* Main.storyboard */; };
@@ -51,6 +53,8 @@
 		83350C7E23FAEBA000DF94AB /* RxSwift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RxSwift; path = Pods/RxSwift; sourceTree = "<group>"; };
 		83350C7F23FAED5400DF94AB /* RxRelay */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RxRelay; path = Pods/RxRelay; sourceTree = "<group>"; };
 		83350C8123FAED6500DF94AB /* RxCocoa */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RxCocoa; path = Pods/RxCocoa; sourceTree = "<group>"; };
+		837D8E122400C4F300A2CA6D /* Realm.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Realm.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		837D8E142400C50000A2CA6D /* RealmSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RealmSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		83D77B1123F2EC35002106B4 /* memoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = memoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		83D77B1423F2EC35002106B4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		83D77B1623F2EC35002106B4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -78,6 +82,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				837D8E152400C50000A2CA6D /* RealmSwift.framework in Frameworks */,
+				837D8E132400C4F300A2CA6D /* Realm.framework in Frameworks */,
 				83350C8323FAED7100DF94AB /* RxSwift in Frameworks */,
 				83350C8223FAED6500DF94AB /* RxCocoa in Frameworks */,
 				83350C8023FAED5400DF94AB /* RxRelay in Frameworks */,
@@ -176,6 +182,8 @@
 		E90822E85C1E41648A66DC7C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				837D8E142400C50000A2CA6D /* RealmSwift.framework */,
+				837D8E122400C4F300A2CA6D /* Realm.framework */,
 				83350C8123FAED6500DF94AB /* RxCocoa */,
 				83350C7F23FAED5400DF94AB /* RxRelay */,
 				83350C7E23FAEBA000DF94AB /* RxSwift */,
