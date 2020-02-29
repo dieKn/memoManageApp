@@ -14,6 +14,7 @@ import RxCocoa
 class MemoViewController: UIViewController {
 
     var memo: String?
+    var memoId: Int?
     
     @IBOutlet weak var memoTextField: UITextField!
     @IBOutlet weak var saveButton: UIBarButtonItem!
@@ -27,6 +28,9 @@ class MemoViewController: UIViewController {
         if let memo = self.memo{
             self.memoTextField.text = memo
             self.navigationItem.title = "Edit Memo"
+        }
+        if let memoId = self.memoId{
+            self.memoId = memoId
         }
         self.updateSaveButtonState()
     }

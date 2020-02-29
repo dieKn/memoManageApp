@@ -7,35 +7,59 @@
 //
 
 import UIKit
+import RealmSwift
 
 
 class MemoTableViewController: UITableViewController {
     
-    var userDefaults = UserDefaults.standard
-
     var memos = [String]()
+    var memoObjects: Results<Memo>!
     
     @IBAction func unwindToMemoList(sender: UIStoryboardSegue){
-        guard let sourceVC = sender.source as? MemoViewController, let memo = sourceVC.memo else{
+        guard let sourceVC = sender.source as? MemoViewController, let memo = sourceVC.memo, let memoId = sourceVC.memoId else{
             return
         }
         if let selectedIndexPath = self.tableView.indexPathForSelectedRow{
             self.memos[selectedIndexPath.row] = memo
+            
+            // realm
+            let realm = try! Realm()
+            let memoModel = realm.objects(Memo.self).filter("id == " + String(memoId)).first ?? Memo()
+            try! realm.write {
+                memoModel.title = memo
+                memoModel.save()
+            }
         }else{
             self.memos.append(memo)
+            
+            // realm
+            let memoModel = Memo()
+            let realm = try! Realm()
+            try! realm.write {
+                memoModel.title = memo
+                memoModel.content = memo
+                memoModel.tags = "test1"
+                memoModel.save()
+            }
         }
-        self.userDefaults.set(self.memos, forKey: "memos")
+        
         self.tableView.reloadData()
     }
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if self.userDefaults.object(forKey: "memos") != nil{
-            self.memos = self.userDefaults.stringArray(forKey: "memos")!
+        // realm 初期化
+        let realm = try! Realm()
+        self.memoObjects = realm.objects(Memo.self)
+        // realmから情報取得
+        if !self.memoObjects.isEmpty{
+            for memoObject in self.memoObjects{
+                self.memos.append(memoObject.title)
+            }
         } else{
             self.memos = ["memo1","memo2","memo3"]
         }
-
+print(Realm.Configuration.defaultConfiguration.fileURL!)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -78,8 +102,13 @@ class MemoTableViewController: UITableViewController {
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
+            let realm = try! Realm()
+            let memoObjects = realm.objects(Memo.self)
+            try! realm.write() {
+                realm.delete(memoObjects[indexPath.row])
+            }
             self.memos.remove(at: indexPath.row)
-            self.userDefaults.set(self.memos, forKey: "memos")
+            
             // Delete the row from the data source
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
@@ -114,6 +143,10 @@ class MemoTableViewController: UITableViewController {
         if identifier == "editMemo"{
             let memoVC = segue.destination as! MemoViewController
             memoVC.memo = self.memos[(self.tableView.indexPathForSelectedRow?.row)!]
+            
+            let realm = try! Realm()
+            let memoObjects = realm.objects(Memo.self)
+            memoVC.memoId = memoObjects[(self.tableView.indexPathForSelectedRow?.row)!].id
         }
     }
 
