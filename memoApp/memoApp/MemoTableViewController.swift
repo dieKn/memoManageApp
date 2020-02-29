@@ -16,7 +16,8 @@ class MemoTableViewController: UITableViewController {
     var memoObjects: Results<Memo>!
     
     @IBAction func unwindToMemoList(sender: UIStoryboardSegue){
-        guard let sourceVC = sender.source as? MemoViewController, let memo = sourceVC.memo, let memoId = sourceVC.memoId else{
+        guard let sourceVC = sender.source as? MemoViewController, let memo = sourceVC.memo else{
+            print("ガードしました！")
             return
         }
         if let selectedIndexPath = self.tableView.indexPathForSelectedRow{
@@ -24,14 +25,13 @@ class MemoTableViewController: UITableViewController {
             
             // realm
             let realm = try! Realm()
-            let memoModel = realm.objects(Memo.self).filter("id == " + String(memoId)).first ?? Memo()
+            let memoModel = realm.objects(Memo.self).filter("id == " + String(sourceVC.memoId!)).first ?? Memo()
             try! realm.write {
                 memoModel.title = memo
                 memoModel.save()
             }
         }else{
             self.memos.append(memo)
-            
             // realm
             let memoModel = Memo()
             let realm = try! Realm()
