@@ -16,7 +16,7 @@ class MemoTableViewController: UITableViewController {
     var memoObjects: Results<Memo>!
     
     @IBAction func unwindToMemoList(sender: UIStoryboardSegue){
-        guard let sourceVC = sender.source as? MemoViewController, let memo = sourceVC.memo else{
+        guard let sourceVC = sender.source as? MemoViewController, let memo = sourceVC.memo, let tags = sourceVC.tags else{
             print("ガードしました！")
             return
         }
@@ -26,19 +26,26 @@ class MemoTableViewController: UITableViewController {
             // realm
             let realm = try! Realm()
             let memoModel = realm.objects(Memo.self).filter("id == " + String(sourceVC.memoId!)).first ?? Memo()
+//            memoModel.tags = List<Tag>()
+            print(tags)
             try! realm.write {
                 memoModel.title = memo
+                memoModel.tags.removeAll()
+                memoModel.tags.append(objectsIn: tags)
                 memoModel.save()
             }
         }else{
+            print ("test")
             self.memos.append(memo)
             // realm
             let memoModel = Memo()
+//            memoModel.tags = List<Tag>()
             let realm = try! Realm()
             try! realm.write {
                 memoModel.title = memo
                 memoModel.content = memo
-                memoModel.tags = "test1"
+                memoModel.tags.removeAll()
+                memoModel.tags.append(objectsIn: tags)
                 memoModel.save()
             }
         }
@@ -57,7 +64,7 @@ class MemoTableViewController: UITableViewController {
                 self.memos.append(memoObject.title)
             }
         } else{
-            self.memos = ["memo1","memo2","memo3"]
+            self.memos = []//["memo1","memo2","memo3"]
         }
 print(Realm.Configuration.defaultConfiguration.fileURL!)
         // Uncomment the following line to preserve selection between presentations
@@ -147,6 +154,7 @@ print(Realm.Configuration.defaultConfiguration.fileURL!)
             let realm = try! Realm()
             let memoObjects = realm.objects(Memo.self)
             memoVC.memoId = memoObjects[(self.tableView.indexPathForSelectedRow?.row)!].id
+            memoVC.tags = Array(memoObjects[(self.tableView.indexPathForSelectedRow?.row)!].tags)
         }
     }
 

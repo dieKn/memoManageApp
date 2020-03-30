@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="hxY-84-5qR">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="hxY-84-5qR">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -12,32 +12,43 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="MemoViewController" customModule="memoApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC" customClass="Memo">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4dS-HI-Mh6">
-                                <rect key="frame" x="30" y="86" width="354" height="34"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="タイトル" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4dS-HI-Mh6">
+                                <rect key="frame" x="30" y="118" width="354" height="34"/>
+                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
                                     <action selector="memoTextFieldChanged:" destination="BYZ-38-t0r" eventType="editingChanged" id="aFV-fT-zef"/>
                                 </connections>
                             </textField>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="タグ" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="8Ll-6W-xC4">
+                                <rect key="frame" x="30" y="182" width="354" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="4dS-HI-Mh6" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="30" id="1ER-KY-w1R"/>
+                            <constraint firstItem="8Ll-6W-xC4" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="6Yx-vV-eLv"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="4dS-HI-Mh6" secondAttribute="trailing" constant="30" id="ID9-Qf-abx"/>
                             <constraint firstItem="4dS-HI-Mh6" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="30" id="N3L-Md-xTV"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="8Ll-6W-xC4" secondAttribute="trailing" constant="30" id="Qnu-6f-ndq"/>
+                            <constraint firstItem="8Ll-6W-xC4" firstAttribute="top" secondItem="4dS-HI-Mh6" secondAttribute="bottom" constant="30" id="RKd-pY-wL9"/>
                             <constraint firstItem="4dS-HI-Mh6" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="SBF-Lu-Kk6"/>
+                            <constraint firstItem="8Ll-6W-xC4" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="30" id="vgV-NQ-bwZ"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <toolbarItems>
+                        <barButtonItem systemItem="cancel" id="j5b-Yj-dOg"/>
+                    </toolbarItems>
                     <navigationItem key="navigationItem" title="New Memo" id="ljv-qG-M0d">
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="eJd-uP-fWf">
                             <connections>
-                                <action selector="cancel:" destination="BYZ-38-t0r" id="NVo-UR-qdn"/>
-                                <segue destination="NjI-Js-S94" kind="unwind" unwindAction="unwindToMemoListWithSender:" id="1gf-8h-nsG"/>
+                                <segue destination="NjI-Js-S94" kind="unwind" unwindAction="unwindToMemoListWithSender:" id="yPf-BW-ida"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="Az6-rl-FSp">
@@ -46,9 +57,11 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="memoTextField" destination="4dS-HI-Mh6" id="jKX-Q1-uLM"/>
                         <outlet property="saveButton" destination="Az6-rl-FSp" id="eX8-09-WOn"/>
+                        <outlet property="tagTextField" destination="8Ll-6W-xC4" id="a05-OV-kfQ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -163,6 +176,7 @@
                 <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="hxY-84-5qR" sceneMemberID="viewController">
                     <toolbarItems/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="bSu-G6-Azl">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
@@ -177,6 +191,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="LpE-iJ-0fh"/>
+        <segue reference="I8s-Yp-7y3"/>
     </inferredMetricsTieBreakers>
 </document>

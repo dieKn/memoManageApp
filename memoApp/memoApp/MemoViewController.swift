@@ -15,9 +15,11 @@ class MemoViewController: UIViewController {
 
     var memo: String?
     var memoId: Int?
+    var tags: Array<Tag>?
     
     @IBOutlet weak var memoTextField: UITextField!
     @IBOutlet weak var saveButton: UIBarButtonItem!
+    @IBOutlet weak var tagTextField: UITextField!
     
     
     override func viewDidLoad() {
@@ -31,6 +33,13 @@ class MemoViewController: UIViewController {
         }
         if let memoId = self.memoId{
             self.memoId = memoId
+        }
+        if let memoTags = self.tags{
+            var tagNameArray = Array<String>()
+            memoTags.forEach {tag in
+                tagNameArray.append(tag.tagName)
+            }
+            self.tagTextField.text = tagNameArray.joined(separator: ",")
         }
         self.updateSaveButtonState()
     }
@@ -66,6 +75,14 @@ class MemoViewController: UIViewController {
         }
         
         self.memo = self.memoTextField.text ?? ""
+        let inputTagName = self.tagTextField.text ?? ""
+        let tagNames = inputTagName.split(separator: ",")
+        self.tags = Array<Tag>()
+        tagNames.forEach{tagName in
+            let tag = Tag()
+            tag.tagName = String(tagName)
+            self.tags?.append(tag)
+        }
     }
 
 }
