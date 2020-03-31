@@ -10,10 +10,14 @@ import UIKit
 import RealmSwift
 
 
-class MemoTableViewController: UITableViewController {
+class MemoTableViewController: UITableViewController, UISearchBarDelegate {
     
     var memos = [String]()
+    var searchResultMemos = [String]()
     var memoObjects: Results<Memo>!
+    
+    @IBOutlet weak var searchBar: UISearchBar!
+    
     
     @IBAction func unwindToMemoList(sender: UIStoryboardSegue){
         guard let sourceVC = sender.source as? MemoViewController, let memo = sourceVC.memo, let tags = sourceVC.tags else{
@@ -26,8 +30,6 @@ class MemoTableViewController: UITableViewController {
             // realm
             let realm = try! Realm()
             let memoModel = realm.objects(Memo.self).filter("id == " + String(sourceVC.memoId!)).first ?? Memo()
-//            memoModel.tags = List<Tag>()
-            print(tags)
             try! realm.write {
                 memoModel.title = memo
                 memoModel.tags.removeAll()
@@ -35,11 +37,9 @@ class MemoTableViewController: UITableViewController {
                 memoModel.save()
             }
         }else{
-            print ("test")
             self.memos.append(memo)
             // realm
             let memoModel = Memo()
-//            memoModel.tags = List<Tag>()
             let realm = try! Realm()
             try! realm.write {
                 memoModel.title = memo
@@ -52,9 +52,13 @@ class MemoTableViewController: UITableViewController {
         
         self.tableView.reloadData()
     }
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        searchBar.delegate = self
         // realm 初期化
         let realm = try! Realm()
         self.memoObjects = realm.objects(Memo.self)
@@ -66,6 +70,7 @@ class MemoTableViewController: UITableViewController {
         } else{
             self.memos = []//["memo1","memo2","memo3"]
         }
+        self.searchResultMemos = self.memos
 print(Realm.Configuration.defaultConfiguration.fileURL!)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -83,7 +88,7 @@ print(Realm.Configuration.defaultConfiguration.fileURL!)
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return self.memos.count
+        return self.searchResultMemos.count
     }
 
     
@@ -92,7 +97,7 @@ print(Realm.Configuration.defaultConfiguration.fileURL!)
 
         // Configure the cell...
         
-        cell.textLabel?.text = self.memos[indexPath.row]
+        cell.textLabel?.text = self.searchResultMemos[indexPath.row]
         return cell
     }
     
@@ -119,6 +124,32 @@ print(Realm.Configuration.defaultConfiguration.fileURL!)
             // Delete the row from the data source
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
+    }
+    
+    //検索ボタン押下時の呼び出しメソッド
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        //キーボードを閉じる。
+        searchBar.endEditing(true)
+    }
+
+
+    //テキスト変更時の呼び出しメソッド
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        //検索結果配列を空にする。
+        self.searchResultMemos.removeAll()
+        if(searchBar.text == "") {
+            //検索文字列が空の場合はすべてを表示する。
+            self.searchResultMemos = memos
+        } else {
+            //検索文字列を含むデータを検索結果配列に追加する。
+            for memo in memos {
+                if memo.contains(self.searchBar.text!) {
+                    self.searchResultMemos.append(memo)
+                }
+            }
+        }
+        //テーブルを再読み込みする。
+        self.tableView.reloadData()
     }
     
 
