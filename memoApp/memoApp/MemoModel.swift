@@ -14,9 +14,15 @@ class Memo: RObject {
     @objc dynamic var content : String = ""
     @objc dynamic var createdDate : Date = NSDate() as Date
     @objc dynamic var updatedDate : Date = NSDate() as Date
+    @objc dynamic var fileStatus : String = ""
     
     // タグ機能
     var tags = List<Tag>()
+}
+
+enum FileStatus: String {
+    case folder = "folder"
+    case file = "file"
 }
 
 class Tag: Object {

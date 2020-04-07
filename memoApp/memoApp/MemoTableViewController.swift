@@ -15,6 +15,7 @@ class MemoTableViewController: UITableViewController, UISearchBarDelegate {
     var memos = [String]()
     var searchResultMemos = [String]()
     var memoObjects: Results<Memo>!
+    var alertController: UIAlertController!
     
     @IBOutlet weak var searchBar: UISearchBar!
     
@@ -32,6 +33,7 @@ class MemoTableViewController: UITableViewController, UISearchBarDelegate {
             let memoModel = realm.objects(Memo.self).filter("id == " + String(sourceVC.memoId!)).first ?? Memo()
             try! realm.write {
                 memoModel.title = memo
+                memoModel.fileStatus = FileStatus.file.rawValue
                 memoModel.tags.removeAll()
                 memoModel.tags.append(objectsIn: tags)
                 memoModel.save()
@@ -44,16 +46,50 @@ class MemoTableViewController: UITableViewController, UISearchBarDelegate {
             try! realm.write {
                 memoModel.title = memo
                 memoModel.content = memo
+                memoModel.fileStatus = FileStatus.file.rawValue
                 memoModel.tags.removeAll()
                 memoModel.tags.append(objectsIn: tags)
                 memoModel.save()
             }
         }
+        self.searchResultMemos = self.memos
         
         self.tableView.reloadData()
     }
     
     
+    @IBAction func createFolder(_ sender: Any) {
+        alert(title: "新規フォルダ",message: "このフォルダの名称を入力してください")
+        self.tableView.reloadData()
+    }
+    
+    func alert(title:String, message:String) {
+        var alertTextField: UITextField?
+        let memoModel = Memo()
+        let realm = try! Realm()
+        alertController = UIAlertController(title: title,
+                                   message: message,
+                                   preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Cancel",
+                                                style: .default,
+                                                handler: nil))
+        alertController.addAction(UIAlertAction(title: "Create",
+                                                style: .default,
+                                                handler: { (UIAlertAction) in
+                                                                                                     try! realm.write {
+                                                                                                        memoModel.title = alertTextField?.text! as! String
+                                                                                                                 memoModel.fileStatus = FileStatus.folder.rawValue
+                                                                                                                 memoModel.save()
+                                                    }
+        }))
+        alertController.addTextField(
+            configurationHandler: {(textField: UITextField!) in
+                alertTextField = textField
+                 textField.placeholder = "名称"
+                // textField.isSecureTextEntry = true
+        })
+        present(alertController, animated: true)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -139,10 +175,10 @@ print(Realm.Configuration.defaultConfiguration.fileURL!)
         self.searchResultMemos.removeAll()
         if(searchBar.text == "") {
             //検索文字列が空の場合はすべてを表示する。
-            self.searchResultMemos = memos
+            self.searchResultMemos = self.memos
         } else {
             //検索文字列を含むデータを検索結果配列に追加する。
-            for memo in memos {
+            for memo in self.memos {
                 if memo.contains(self.searchBar.text!) {
                     self.searchResultMemos.append(memo)
                 }

@@ -7,6 +7,22 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--View Controller-->
+        <scene sceneID="H3f-vJ-qjv">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MXf-OV-be4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <viewController id="VfJ-w7-LPr" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="u1Y-eZ-myQ">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="Ygp-Lk-HiS"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="MXN-mh-9xV"/>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="2292" y="-567"/>
+        </scene>
         <!--New Memo-->
         <scene sceneID="tne-QT-ifu">
             <objects>
@@ -40,9 +56,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
-                    <toolbarItems>
-                        <barButtonItem systemItem="cancel" id="j5b-Yj-dOg"/>
-                    </toolbarItems>
+                    <toolbarItems/>
                     <navigationItem key="navigationItem" title="New Memo" id="ljv-qG-M0d">
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="eJd-uP-fWf">
                             <connections>
@@ -107,6 +121,14 @@
                             <outlet property="delegate" destination="dS2-eX-6TK" id="Vch-uK-tPR"/>
                         </connections>
                     </tableView>
+                    <toolbarItems>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="ft5-nr-D4q"/>
+                        <barButtonItem title="フォルダ作成" id="kr1-8j-kVh">
+                            <connections>
+                                <action selector="createFolder:" destination="dS2-eX-6TK" id="xas-56-U1j"/>
+                            </connections>
+                        </barButtonItem>
+                    </toolbarItems>
                     <navigationItem key="navigationItem" title="Memo" id="vYT-kz-y0u">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="BZz-C7-mv2">
                             <connections>
@@ -114,8 +136,10 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="searchBar" destination="6hE-ND-U8X" id="BUC-J3-Y0I"/>
+                        <segue destination="VfJ-w7-LPr" kind="show" id="cgP-ZX-ZXe"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WTF-iP-fU2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -141,7 +165,7 @@
         <!--Item-->
         <scene sceneID="0EM-4a-uiT">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="XP8-Uc-9jv" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="XP8-Uc-9jv" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item" id="aJS-iI-bgk"/>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="v2e-mt-csB"/>
@@ -150,6 +174,10 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="IHZ-Ag-Yle">
+                        <rect key="frame" x="0.0" y="764" width="414" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
                     <connections>
                         <segue destination="dS2-eX-6TK" kind="relationship" relationship="rootViewController" id="7Ss-ib-V98"/>
                     </connections>
@@ -174,7 +202,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="saX-85-b6I" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1921.7391304347827" y="714.50892857142856"/>
+            <point key="canvasLocation" x="1668" y="913"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="cxJ-XG-xUX">
