@@ -9,6 +9,8 @@
 import UIKit
 import CoreData
 import UserNotifications
+import Realm
+import RealmSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
@@ -43,6 +45,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         center.add(request)
         center.add(request)
         center.delegate = self
+        
+        //MARK: - migrationのコード
+//        let config = Realm.Configuration(
+//            schemaVersion: 1,
+//            migrationBlock: { migration, oldSchemaVersion in
+//                if (oldSchemaVersion < 1) {
+//                    migration.enumerateObjects(ofType: Memo.className()) { oldObject, newObject in
+//                    // firstNameとlastNameをfullNameプロパティに結合します
+//                    newObject!["id"] = 1
+//                }
+//                }})
+//        Realm.Configuration.defaultConfiguration = config
+//        let realm = try! Realm()
+        // 削除ようコード
+//        let realmURL = Realm.Configuration.defaultConfiguration.fileURL!
+//        let realmURLs = [
+//            realmURL,
+//            realmURL.appendingPathExtension("lock"),
+//            realmURL.appendingPathExtension("note"),
+//            realmURL.appendingPathExtension("management")
+//        ]
+//        for URL in realmURLs {
+//            do {
+//                try FileManager.default.removeItem(at: URL)
+//            } catch {
+//                // handle error
+//            }
+//        }
+
         return true
     }
     

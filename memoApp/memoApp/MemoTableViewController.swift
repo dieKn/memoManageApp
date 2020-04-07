@@ -7,35 +7,107 @@
 //
 
 import UIKit
+import RealmSwift
 
 
-class MemoTableViewController: UITableViewController {
+class MemoTableViewController: UITableViewController, UISearchBarDelegate {
     
-    var userDefaults = UserDefaults.standard
-
     var memos = [String]()
+    var searchResultMemos = [String]()
+    var memoObjects: Results<Memo>!
+    var alertController: UIAlertController!
+    
+    @IBOutlet weak var searchBar: UISearchBar!
+    
     
     @IBAction func unwindToMemoList(sender: UIStoryboardSegue){
-        guard let sourceVC = sender.source as? MemoViewController, let memo = sourceVC.memo else{
+        guard let sourceVC = sender.source as? MemoViewController, let memo = sourceVC.memo, let tags = sourceVC.tags else{
+            print("ガードしました！")
             return
         }
         if let selectedIndexPath = self.tableView.indexPathForSelectedRow{
             self.memos[selectedIndexPath.row] = memo
+            
+            // realm
+            let realm = try! Realm()
+            let memoModel = realm.objects(Memo.self).filter("id == " + String(sourceVC.memoId!)).first ?? Memo()
+            try! realm.write {
+                memoModel.title = memo
+                memoModel.fileStatus = FileStatus.file.rawValue
+                memoModel.tags.removeAll()
+                memoModel.tags.append(objectsIn: tags)
+                memoModel.save()
+            }
         }else{
             self.memos.append(memo)
+            // realm
+            let memoModel = Memo()
+            let realm = try! Realm()
+            try! realm.write {
+                memoModel.title = memo
+                memoModel.content = memo
+                memoModel.fileStatus = FileStatus.file.rawValue
+                memoModel.tags.removeAll()
+                memoModel.tags.append(objectsIn: tags)
+                memoModel.save()
+            }
         }
-        self.userDefaults.set(self.memos, forKey: "memos")
+        self.searchResultMemos = self.memos
+        
         self.tableView.reloadData()
     }
+    
+    
+    @IBAction func createFolder(_ sender: Any) {
+        alert(title: "新規フォルダ",message: "このフォルダの名称を入力してください")
+        self.tableView.reloadData()
+    }
+    
+    func alert(title:String, message:String) {
+        var alertTextField: UITextField?
+        let memoModel = Memo()
+        let realm = try! Realm()
+        alertController = UIAlertController(title: title,
+                                   message: message,
+                                   preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Cancel",
+                                                style: .default,
+                                                handler: nil))
+        alertController.addAction(UIAlertAction(title: "Create",
+                                                style: .default,
+                                                handler: { (UIAlertAction) in
+                                                                                                     try! realm.write {
+                                                                                                        memoModel.title = alertTextField?.text! as! String
+                                                                                                                 memoModel.fileStatus = FileStatus.folder.rawValue
+                                                                                                                 memoModel.save()
+                                                    }
+        }))
+        alertController.addTextField(
+            configurationHandler: {(textField: UITextField!) in
+                alertTextField = textField
+                 textField.placeholder = "名称"
+                // textField.isSecureTextEntry = true
+        })
+        present(alertController, animated: true)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if self.userDefaults.object(forKey: "memos") != nil{
-            self.memos = self.userDefaults.stringArray(forKey: "memos")!
+        searchBar.delegate = self
+        // realm 初期化
+        let realm = try! Realm()
+        self.memoObjects = realm.objects(Memo.self)
+        // realmから情報取得
+        if !self.memoObjects.isEmpty{
+            for memoObject in self.memoObjects{
+                self.memos.append(memoObject.title)
+            }
         } else{
-            self.memos = ["memo1","memo2","memo3"]
+            self.memos = []//["memo1","memo2","memo3"]
         }
-
+        self.searchResultMemos = self.memos
+print(Realm.Configuration.defaultConfiguration.fileURL!)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -52,7 +124,7 @@ class MemoTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return self.memos.count
+        return self.searchResultMemos.count
     }
 
     
@@ -61,7 +133,7 @@ class MemoTableViewController: UITableViewController {
 
         // Configure the cell...
         
-        cell.textLabel?.text = self.memos[indexPath.row]
+        cell.textLabel?.text = self.searchResultMemos[indexPath.row]
         return cell
     }
     
@@ -78,11 +150,42 @@ class MemoTableViewController: UITableViewController {
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
+            let realm = try! Realm()
+            let memoObjects = realm.objects(Memo.self)
+            try! realm.write() {
+                realm.delete(memoObjects[indexPath.row])
+            }
             self.memos.remove(at: indexPath.row)
-            self.userDefaults.set(self.memos, forKey: "memos")
+            
             // Delete the row from the data source
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
+    }
+    
+    //検索ボタン押下時の呼び出しメソッド
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        //キーボードを閉じる。
+        searchBar.endEditing(true)
+    }
+
+
+    //テキスト変更時の呼び出しメソッド
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        //検索結果配列を空にする。
+        self.searchResultMemos.removeAll()
+        if(searchBar.text == "") {
+            //検索文字列が空の場合はすべてを表示する。
+            self.searchResultMemos = self.memos
+        } else {
+            //検索文字列を含むデータを検索結果配列に追加する。
+            for memo in self.memos {
+                if memo.contains(self.searchBar.text!) {
+                    self.searchResultMemos.append(memo)
+                }
+            }
+        }
+        //テーブルを再読み込みする。
+        self.tableView.reloadData()
     }
     
 
@@ -114,6 +217,11 @@ class MemoTableViewController: UITableViewController {
         if identifier == "editMemo"{
             let memoVC = segue.destination as! MemoViewController
             memoVC.memo = self.memos[(self.tableView.indexPathForSelectedRow?.row)!]
+            
+            let realm = try! Realm()
+            let memoObjects = realm.objects(Memo.self)
+            memoVC.memoId = memoObjects[(self.tableView.indexPathForSelectedRow?.row)!].id
+            memoVC.tags = Array(memoObjects[(self.tableView.indexPathForSelectedRow?.row)!].tags)
         }
     }
 
